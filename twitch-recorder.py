@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import subprocess, os, configparser, threading, time, sys, json
+import subprocess, os, configparser, threading, time, sys, json, traceback
 from datetime import datetime
 from tkinter import filedialog, Tk
 from time import sleep as s
@@ -244,15 +244,21 @@ class TwitchRecorder:
 if __name__ == '__main__':
     streamer_name = input('Streamer Username to record: ')
     recorder = TwitchRecorder(streamer_name)
+
+while True:
     
     try:
         if recorder.start_recording():
             print("🎉 Success!")
+            time.sleep(60)
         else:
-            print("😞 Failed")
+            print("😞 Failed — retrying in 60 seconds")
+            time.sleep(60)
     except KeyboardInterrupt:
         print("\n🛑 Interrupted by user")
+        break
     except Exception as e:
-        print(f"💥 Fatal error: {e}")
-        import traceback
+        print(f"💥 Error: {e}")
         traceback.print_exc()
+        print("Retrying in 60 seconds")
+        time.sleep(60)
